@@ -45,3 +45,43 @@ button {
     border-radius: 8px;
     cursor: pointer;
 }
+header {
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+header p {
+    opacity: 0.9;
+}
+
+.section {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.section:hover {
+    transform: translateY(-2px);
+}
+
+h2 {
+    color: #0d47a1;
+}
+
+.dark-mode h2 {
+    color: #64b5f6;
+}
+
+button {
+    background: #0d47a1;
+    color: white;
+    font-weight: bold;
+}
+
+button:hover {
+    opacity: 0.9;
+}
