@@ -4,7 +4,9 @@ import {
   getFirestore,
   collection,
   addDoc,
-  getDocs
+  getDocs,
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -20,4 +22,11 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-export { db, collection, addDoc, getDocs };
+export {
+  db,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  getDoc
+};
