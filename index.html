@@ -1,27 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RealCricketTracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealCricketTracker</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 
+<header>
     <h1>🏏 RealCricketTracker</h1>
+    <p>Track Tests, ODIs and T20s</p>
+</header>
 
-    <p>Your Cricket Statistics Hub</p>
+<div class="section">
+    <h2>Theme</h2>
+    <button onclick="toggleTheme()">Toggle Dark Mode</button>
+</div>
 
-    <h2>Features Coming Soon</h2>
+<div class="section">
+    <h2>Features</h2>
 
     <ul>
         <li>Test Match Tracking</li>
-        <li>ODI Match Tracking</li>
+        <li>ODI Phase Tracking</li>
         <li>T20 Match Tracking</li>
         <li>Player Profiles</li>
         <li>Team Profiles</li>
-        <li>Tournament Tables</li>
         <li>Statistics Dashboard</li>
+        <li>Tournament Tables</li>
     </ul>
+</div>
+
+<script>
+function toggleTheme() {
+    document.body.classList.toggle("dark-mode");
+}
+</script>
 
 </body>
 </html>
