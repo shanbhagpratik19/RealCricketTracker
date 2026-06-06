@@ -61,7 +61,7 @@ window.saveMatch = async function () {
 
         console.error(error);
 
-        alert("Error saving match.");
+        alert(error.message);
     }
 };
 
@@ -124,6 +124,6 @@ window.savePlayer = async function () {
 
         console.error(error);
 
-        alert("Error saving player.");
+        alert(error.message);
     }
 };
