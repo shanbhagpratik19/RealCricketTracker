@@ -39,30 +39,15 @@ async function loadMatch() {
                     ${match.team2}
                 </h2>
 
-                <p>
-                    <strong>Format:</strong>
-                    ${match.format}
-                </p>
+                <p><strong>Format:</strong> ${match.format}</p>
 
-                <p>
-                    <strong>Venue:</strong>
-                    ${match.venue}
-                </p>
+                <p><strong>Venue:</strong> ${match.venue}</p>
 
-                <p>
-                    <strong>Series:</strong>
-                    ${match.series || "N/A"}
-                </p>
+                <p><strong>Series:</strong> ${match.series || "N/A"}</p>
 
-                <p>
-                    <strong>Season:</strong>
-                    ${match.season || "N/A"}
-                </p>
+                <p><strong>Season:</strong> ${match.season || "N/A"}</p>
 
-                <p>
-                    <strong>Status:</strong>
-                    ${match.status || "N/A"}
-                </p>
+                <p><strong>Status:</strong> ${match.status || "N/A"}</p>
 
                 <p>
                     <strong>Toss:</strong>
