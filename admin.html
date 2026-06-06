@@ -14,12 +14,29 @@
 </header>
 
 <div class="section">
-    <h2>Quick Actions</h2>
+    <h2>Add Match</h2>
 
-    <button>Add Match</button>
-    <button>Add Player</button>
-    <button>Update Team Stats</button>
-    <button>Update Tournament Table</button>
+    <input type="text" id="team1" placeholder="Team 1">
+
+    <br><br>
+
+    <input type="text" id="team2" placeholder="Team 2">
+
+    <br><br>
+
+    <select id="format">
+        <option>Test</option>
+        <option>ODI</option>
+        <option>T20</option>
+    </select>
+
+    <br><br>
+
+    <input type="text" id="venue" placeholder="Venue">
+
+    <br><br>
+
+    <button onclick="saveMatch()">Save Match</button>
 </div>
 
 <div class="section">
