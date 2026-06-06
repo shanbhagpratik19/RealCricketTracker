@@ -1,32 +1,43 @@
-alert("app.js loaded");
+import { db, collection, getDocs } from "./firestore.js";
 
-import { db, collection, addDoc } from "./firestore.js";
+async function loadMatches() {
 
-alert("Firestore imported");
+    const container = document.getElementById("recentMatches");
 
-window.saveMatch = async function () {
+    if (!container) return;
 
-    alert("Save button clicked");
-
-    const team1 = document.getElementById("team1")?.value;
-    const team2 = document.getElementById("team2")?.value;
-    const format = document.getElementById("format")?.value;
-    const venue = document.getElementById("venue")?.value;
+    container.innerHTML = "Loading matches...";
 
     try {
 
-        await addDoc(collection(db, "matches"), {
-            team1,
-            team2,
-            format,
-            venue,
-            createdAt: new Date().toISOString()
+        const snapshot = await getDocs(
+            collection(db, "matches")
+        );
+
+        let html = "";
+
+        snapshot.forEach((doc) => {
+
+            const match = doc.data();
+
+            html += `
+                <div style="padding:10px; margin-bottom:10px;">
+                    <strong>${match.team1} vs ${match.team2}</strong>
+                    <br>
+                    ${match.format} • ${match.venue}
+                </div>
+            `;
         });
 
-        alert("Match saved to Firestore!");
+        container.innerHTML = html;
 
     } catch (error) {
 
-        alert("Firebase Error: " + error.message);
+        container.innerHTML =
+            "Unable to load matches.";
+
+        console.error(error);
     }
-};
+}
+
+loadMatches();
