@@ -1,34 +1,44 @@
-import { db, collection, getDocs } from "./firestore.js";
+import { db, doc, getDoc } from "./firestore.js";
 
 const container =
     document.getElementById("matchDetails");
 
 async function loadMatch() {
 
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const matchId =
+        params.get("id");
+
+    if (!matchId) {
+
+        container.innerHTML =
+            "No match selected.";
+
+        return;
+    }
+
     try {
 
-        const snapshot =
-            await getDocs(
-                collection(db, "matches")
-            );
+        const matchRef =
+            doc(db, "matches", matchId);
 
-        let match = null;
+        const matchSnap =
+            await getDoc(matchRef);
 
-        snapshot.forEach((doc) => {
-
-            if (!match) {
-                match = doc.data();
-            }
-
-        });
-
-        if (!match) {
+        if (!matchSnap.exists()) {
 
             container.innerHTML =
-                "No match found.";
+                "Match not found.";
 
             return;
         }
+
+        const match =
+            matchSnap.data();
 
         container.innerHTML = `
             <div class="match-card">
