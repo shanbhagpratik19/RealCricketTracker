@@ -10,13 +10,9 @@ async function loadMatches() {
 
     try {
 
-        alert("Attempting Firestore read");
-
         const snapshot = await getDocs(
             collection(db, "matches")
         );
-
-        alert("Documents found: " + snapshot.size);
 
         let html = "";
 
@@ -37,7 +33,7 @@ async function loadMatches() {
 
     } catch (error) {
 
-        alert("Firestore Error: " + error.message);
+     console.error(error);
 
         container.innerHTML = "Unable to load matches.";
     }
