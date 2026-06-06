@@ -1,8 +1,12 @@
+alert("app.js loaded");
+
 import { db, collection, addDoc } from "./firestore.js";
 
-console.log("RealCricketTracker Loaded");
+alert("Firestore imported");
 
 window.saveMatch = async function () {
+
+    alert("Save button clicked");
 
     const team1 = document.getElementById("team1")?.value;
     const team2 = document.getElementById("team2")?.value;
@@ -23,8 +27,6 @@ window.saveMatch = async function () {
 
     } catch (error) {
 
-        console.error(error);
-
-        alert("Error saving match.");
+        alert("Firebase Error: " + error.message);
     }
 };
