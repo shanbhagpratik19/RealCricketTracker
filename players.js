@@ -20,8 +20,29 @@ async function loadPlayers() {
 
             html += `
                 <div class="match-card">
+
                     <h3>${player.name}</h3>
-                    <p>${player.team}</p>
+
+                    <p>
+                        <strong>Team:</strong>
+                        ${player.team}
+                    </p>
+
+                    <p>
+                        <strong>Role:</strong>
+                        ${player.role}
+                    </p>
+
+                    <p>
+                        <strong>Batting:</strong>
+                        ${player.battingStyle}
+                    </p>
+
+                    <p>
+                        <strong>Bowling:</strong>
+                        ${player.bowlingStyle}
+                    </p>
+
                 </div>
             `;
         });
