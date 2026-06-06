@@ -85,3 +85,18 @@ button {
 button:hover {
     opacity: 0.9;
 }
+.match-card {
+    background: white;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.dark-mode .match-card {
+    background: #1e1e1e;
+}
+
+.match-card h3 {
+    margin-bottom: 8px;
+}
