@@ -7,14 +7,52 @@ window.saveMatch = async function () {
     const format = document.getElementById("format")?.value;
     const venue = document.getElementById("venue")?.value;
 
+    const series = document.getElementById("series")?.value;
+    const season = document.getElementById("season")?.value;
+
+    const matchType =
+        document.getElementById("matchType")?.value;
+
+    const tossWinner =
+        document.getElementById("tossWinner")?.value;
+
+    const tossDecision =
+        document.getElementById("tossDecision")?.value;
+
+    const status =
+        document.getElementById("status")?.value;
+
+    const playerOfMatch =
+        document.getElementById("playerOfMatch")?.value;
+
+    const result =
+        document.getElementById("result")?.value;
+
     try {
 
         await addDoc(collection(db, "matches"), {
+
             team1,
             team2,
             format,
             venue,
-            createdAt: new Date().toISOString()
+
+            series,
+            season,
+
+            matchType,
+
+            tossWinner,
+            tossDecision,
+
+            status,
+
+            playerOfMatch,
+            result,
+
+            createdAt:
+                new Date().toISOString()
+
         });
 
         alert("Match saved successfully!");
