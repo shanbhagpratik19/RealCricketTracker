@@ -40,13 +40,44 @@
 </div>
 
 <div class="section">
+    <h2>Add Player</h2>
+
+    <input type="text" id="playerName" placeholder="Player Name">
+
+    <br><br>
+
+    <input type="text" id="playerTeam" placeholder="Team">
+
+    <br><br>
+
+    <select id="playerRole">
+        <option>Batter</option>
+        <option>Bowler</option>
+        <option>All-Rounder</option>
+        <option>Wicket Keeper</option>
+    </select>
+
+    <br><br>
+
+    <input type="text" id="battingStyle" placeholder="Batting Style">
+
+    <br><br>
+
+    <input type="text" id="bowlingStyle" placeholder="Bowling Style">
+
+    <br><br>
+
+    <button onclick="savePlayer()">Save Player</button>
+</div>
+
+<div class="section">
     <h2>Dashboard</h2>
     <p>Total Matches: 0</p>
     <p>Total Players: 0</p>
     <p>Total Teams: 0</p>
 </div>
 
-<script type="module" src="app.js"></script>
+<script type="module" src="admin.js"></script>
 
 </body>
 </html>
