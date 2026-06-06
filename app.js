@@ -21,10 +21,15 @@ async function loadMatches() {
             const match = doc.data();
 
             html += `
-                <div class="match-card">
+                <div class="match-card"
+                     onclick="openMatch('${doc.id}')">
+
                     <h3>${match.team1} vs ${match.team2}</h3>
+
                     <p>${match.format}</p>
+
                     <p>${match.venue}</p>
+
                 </div>
             `;
         });
@@ -38,5 +43,11 @@ async function loadMatches() {
         container.innerHTML = "Unable to load matches.";
     }
 }
+
+window.openMatch = function(matchId) {
+
+    window.location.href =
+        "match.html?id=" + matchId;
+};
 
 loadMatches();
