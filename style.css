@@ -100,3 +100,6 @@ button:hover {
 .match-card h3 {
     margin-bottom: 8px;
 }
+.match-card {
+    cursor: pointer;
+}
