@@ -21,10 +21,10 @@ async function loadMatches() {
             const match = doc.data();
 
             html += `
-                <div style="padding:10px; margin-bottom:10px;">
-                    <strong>${match.team1} vs ${match.team2}</strong>
-                    <br>
-                    ${match.format} • ${match.venue}
+                <div class="match-card">
+                    <h3>${match.team1} vs ${match.team2}</h3>
+                    <p>${match.format}</p>
+                    <p>${match.venue}</p>
                 </div>
             `;
         });
@@ -33,7 +33,7 @@ async function loadMatches() {
 
     } catch (error) {
 
-     console.error(error);
+        console.error(error);
 
         container.innerHTML = "Unable to load matches.";
     }
