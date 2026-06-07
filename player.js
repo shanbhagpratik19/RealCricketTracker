@@ -53,9 +53,18 @@ async function loadPlayer() {
             playerSnap.data();
 
         let totalRuns = 0;
+        let totalBalls = 0;
         let highestScore = 0;
+
+        let fifties = 0;
+        let hundreds = 0;
+
         let totalWickets = 0;
-        let matches = 0;
+
+        let dismissals = 0;
+
+        const matchSet =
+            new Set();
 
         const inningsSnapshot =
             await getDocs(
@@ -65,15 +74,14 @@ async function loadPlayer() {
                 )
             );
 
-        const matchSet =
-            new Set();
-
         inningsSnapshot.forEach((doc) => {
 
             const record =
                 doc.data();
 
-            /* Batting Stats */
+            /* =====================
+               BATTING
+            ===================== */
 
             if (
                 record.type === "batter" &&
@@ -85,7 +93,13 @@ async function loadPlayer() {
                         record.runs || 0
                     );
 
+                const balls =
+                    Number(
+                        record.balls || 0
+                    );
+
                 totalRuns += runs;
+                totalBalls += balls;
 
                 if (
                     runs >
@@ -93,6 +107,34 @@ async function loadPlayer() {
                 ) {
                     highestScore =
                         runs;
+                }
+
+                if (
+                    runs >= 50 &&
+                    runs < 100
+                ) {
+                    fifties++;
+                }
+
+                if (
+                    runs >= 100
+                ) {
+                    hundreds++;
+                }
+
+                const dismissal =
+                    (
+                        record.dismissal || ""
+                    )
+                    .trim()
+                    .toLowerCase();
+
+                if (
+                    dismissal !== "" &&
+                    dismissal !== "not out" &&
+                    dismissal !== "*"
+                ) {
+                    dismissals++;
                 }
 
                 if (
@@ -104,7 +146,9 @@ async function loadPlayer() {
                 }
             }
 
-            /* Bowling Stats */
+            /* =====================
+               BOWLING
+            ===================== */
 
             if (
                 record.type === "bowler" &&
@@ -127,8 +171,24 @@ async function loadPlayer() {
 
         });
 
-        matches =
+        const matches =
             matchSet.size;
+
+        const battingAverage =
+            dismissals > 0
+                ? (
+                    totalRuns /
+                    dismissals
+                  ).toFixed(2)
+                : totalRuns.toFixed(2);
+
+        const strikeRate =
+            totalBalls > 0
+                ? (
+                    (totalRuns / totalBalls)
+                    * 100
+                  ).toFixed(2)
+                : "0.00";
 
         container.innerHTML = `
             <div class="match-card">
@@ -176,6 +236,26 @@ async function loadPlayer() {
                 <p>
                     <strong>Highest Score:</strong>
                     ${highestScore}
+                </p>
+
+                <p>
+                    <strong>50s:</strong>
+                    ${fifties}
+                </p>
+
+                <p>
+                    <strong>100s:</strong>
+                    ${hundreds}
+                </p>
+
+                <p>
+                    <strong>Batting Average:</strong>
+                    ${battingAverage}
+                </p>
+
+                <p>
+                    <strong>Strike Rate:</strong>
+                    ${strikeRate}
                 </p>
 
                 <p>
