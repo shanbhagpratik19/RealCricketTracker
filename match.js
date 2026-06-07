@@ -12,6 +12,9 @@ import {
 const container =
     document.getElementById("matchDetails");
 
+const inningsSummary =
+    document.getElementById("inningsSummary");
+
 const battingCard =
     document.getElementById("battingCard");
 
@@ -72,6 +75,7 @@ async function saveBatter() {
         alert("Batter saved!");
 
         loadBattingCard();
+        loadInningsSummary();
 
     } catch (error) {
 
@@ -81,8 +85,7 @@ async function saveBatter() {
     }
 }
 
-window.saveBatter =
-    saveBatter;
+window.saveBatter = saveBatter;
 
 /* =========================
    BOWLERS
@@ -134,8 +137,7 @@ async function saveBowler() {
     }
 }
 
-window.saveBowler =
-    saveBowler;
+window.saveBowler = saveBowler;
 
 /* =========================
    WICKETS
@@ -178,6 +180,7 @@ async function saveWicket() {
         alert("Wicket saved!");
 
         loadWickets();
+        loadInningsSummary();
 
     } catch (error) {
 
@@ -187,8 +190,79 @@ async function saveWicket() {
     }
 }
 
-window.saveWicket =
-    saveWicket;
+window.saveWicket = saveWicket;
+
+/* =========================
+   INNINGS SUMMARY
+========================= */
+
+async function loadInningsSummary() {
+
+    const q = query(
+        collection(db, "innings"),
+        where("matchId", "==", matchId),
+        where("type", "==", "batter")
+    );
+
+    const snapshot =
+        await getDocs(q);
+
+    let totalRuns = 0;
+    let totalBalls = 0;
+    let totalWickets = 0;
+
+    snapshot.forEach((doc) => {
+
+        const batter =
+            doc.data();
+
+        totalRuns +=
+            Number(batter.runs || 0);
+
+        totalBalls +=
+            Number(batter.balls || 0);
+
+        if (
+            batter.dismissal &&
+            batter.dismissal.trim() !== "" &&
+            batter.dismissal.toLowerCase() !== "not out"
+        ) {
+            totalWickets++;
+        }
+
+    });
+
+    const overs =
+        Math.floor(totalBalls / 6) +
+        "." +
+        (totalBalls % 6);
+
+    const runRate =
+        totalBalls > 0
+            ? ((totalRuns / totalBalls) * 6)
+                .toFixed(2)
+            : "0.00";
+
+    inningsSummary.innerHTML = `
+        <div class="match-card">
+
+            <h3>
+                ${totalRuns}/${totalWickets}
+            </h3>
+
+            <p>
+                Overs:
+                ${overs}
+            </p>
+
+            <p>
+                Run Rate:
+                ${runRate}
+            </p>
+
+        </div>
+    `;
+}
 
 /* =========================
    MATCH DETAILS
@@ -275,30 +349,13 @@ async function loadBattingCard() {
 
         html += `
             <div class="match-card">
-
-                <strong>
-                    ${batter.playerName}
-                </strong>
-
+                <strong>${batter.playerName}</strong>
                 <br>
-
-                ${batter.runs}
-                (${batter.balls})
-
+                ${batter.runs} (${batter.balls})
                 <br>
-
-                4s:
-                ${batter.fours}
-
-                |
-
-                6s:
-                ${batter.sixes}
-
+                4s: ${batter.fours} | 6s: ${batter.sixes}
                 <br>
-
                 ${batter.dismissal}
-
             </div>
         `;
     });
@@ -331,21 +388,9 @@ async function loadBowlingCard() {
 
         html += `
             <div class="match-card">
-
-                <strong>
-                    ${bowler.bowlerName}
-                </strong>
-
+                <strong>${bowler.bowlerName}</strong>
                 <br>
-
-                ${bowler.overs}
-                -
-                ${bowler.maidens}
-                -
-                ${bowler.runsConceded}
-                -
-                ${bowler.wickets}
-
+                ${bowler.overs}-${bowler.maidens}-${bowler.runsConceded}-${bowler.wickets}
             </div>
         `;
     });
@@ -378,27 +423,14 @@ async function loadWickets() {
 
         html += `
             <div class="match-card">
-
-                <strong>
-                    ${wicket.score}
-                </strong>
-
+                <strong>${wicket.score}</strong>
                 <br>
-
                 ${wicket.player}
-
-                ${wicket.runs}
-                (${wicket.balls})
-
+                ${wicket.runs} (${wicket.balls})
                 <br>
-
-                Over:
-                ${wicket.over}
-
+                Over: ${wicket.over}
                 <br>
-
                 ${wicket.dismissal}
-
             </div>
         `;
     });
@@ -412,6 +444,7 @@ async function loadWickets() {
 ========================= */
 
 loadMatch();
+loadInningsSummary();
 loadBattingCard();
 loadBowlingCard();
 loadWickets();
