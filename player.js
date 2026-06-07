@@ -1,7 +1,9 @@
 import {
     db,
     doc,
-    getDoc
+    getDoc,
+    collection,
+    getDocs
 } from "./firestore.js";
 
 const container =
@@ -50,6 +52,84 @@ async function loadPlayer() {
         const player =
             playerSnap.data();
 
+        let totalRuns = 0;
+        let highestScore = 0;
+        let totalWickets = 0;
+        let matches = 0;
+
+        const inningsSnapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "innings"
+                )
+            );
+
+        const matchSet =
+            new Set();
+
+        inningsSnapshot.forEach((doc) => {
+
+            const record =
+                doc.data();
+
+            /* Batting Stats */
+
+            if (
+                record.type === "batter" &&
+                record.playerName === player.name
+            ) {
+
+                const runs =
+                    Number(
+                        record.runs || 0
+                    );
+
+                totalRuns += runs;
+
+                if (
+                    runs >
+                    highestScore
+                ) {
+                    highestScore =
+                        runs;
+                }
+
+                if (
+                    record.matchId
+                ) {
+                    matchSet.add(
+                        record.matchId
+                    );
+                }
+            }
+
+            /* Bowling Stats */
+
+            if (
+                record.type === "bowler" &&
+                record.bowlerName === player.name
+            ) {
+
+                totalWickets +=
+                    Number(
+                        record.wickets || 0
+                    );
+
+                if (
+                    record.matchId
+                ) {
+                    matchSet.add(
+                        record.matchId
+                    );
+                }
+            }
+
+        });
+
+        matches =
+            matchSet.size;
+
         container.innerHTML = `
             <div class="match-card">
 
@@ -84,18 +164,23 @@ async function loadPlayer() {
                 </h3>
 
                 <p>
-                    Matches:
-                    Coming Soon
+                    <strong>Matches:</strong>
+                    ${matches}
                 </p>
 
                 <p>
-                    Runs:
-                    Coming Soon
+                    <strong>Runs:</strong>
+                    ${totalRuns}
                 </p>
 
                 <p>
-                    Wickets:
-                    Coming Soon
+                    <strong>Highest Score:</strong>
+                    ${highestScore}
+                </p>
+
+                <p>
+                    <strong>Wickets:</strong>
+                    ${totalWickets}
                 </p>
 
             </div>
