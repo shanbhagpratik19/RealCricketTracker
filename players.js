@@ -16,34 +16,47 @@ async function loadPlayers() {
 
         snapshot.forEach((doc) => {
 
-            const player = doc.data();
+            const player =
+                doc.data();
 
             html += `
-                <div class="match-card">
+                <a
+                    href="player.html?id=${doc.id}"
+                    style="
+                        text-decoration:none;
+                        color:inherit;
+                    "
+                >
 
-                    <h3>${player.name}</h3>
+                    <div class="match-card">
 
-                    <p>
-                        <strong>Team:</strong>
-                        ${player.team}
-                    </p>
+                        <h3>
+                            ${player.name}
+                        </h3>
 
-                    <p>
-                        <strong>Role:</strong>
-                        ${player.role}
-                    </p>
+                        <p>
+                            <strong>Team:</strong>
+                            ${player.team}
+                        </p>
 
-                    <p>
-                        <strong>Batting:</strong>
-                        ${player.battingStyle}
-                    </p>
+                        <p>
+                            <strong>Role:</strong>
+                            ${player.role}
+                        </p>
 
-                    <p>
-                        <strong>Bowling:</strong>
-                        ${player.bowlingStyle}
-                    </p>
+                        <p>
+                            <strong>Batting:</strong>
+                            ${player.battingStyle}
+                        </p>
 
-                </div>
+                        <p>
+                            <strong>Bowling:</strong>
+                            ${player.bowlingStyle}
+                        </p>
+
+                    </div>
+
+                </a>
             `;
         });
 
