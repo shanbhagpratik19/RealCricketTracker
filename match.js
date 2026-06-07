@@ -25,8 +25,6 @@ const matchId =
 
 async function saveBatter() {
 
-    alert("Save button clicked");
-
     const inningsNumber =
         document.getElementById("inningsNumber").value;
 
@@ -112,12 +110,37 @@ async function loadMatch() {
 
         container.innerHTML = `
             <div class="match-card">
-                <h2>${match.team1} vs ${match.team2}</h2>
+
+                <h2>
+                    ${match.team1}
+                    vs
+                    ${match.team2}
+                </h2>
+
                 <p><strong>Format:</strong> ${match.format}</p>
+
                 <p><strong>Venue:</strong> ${match.venue}</p>
+
                 <p><strong>Series:</strong> ${match.series || "N/A"}</p>
+
                 <p><strong>Season:</strong> ${match.season || "N/A"}</p>
+
                 <p><strong>Status:</strong> ${match.status || "N/A"}</p>
+
+                <p><strong>Toss:</strong>
+                    ${match.tossWinner || "N/A"}
+                    chose to
+                    ${match.tossDecision || "N/A"}
+                </p>
+
+                <p><strong>Player Of Match:</strong>
+                    ${match.playerOfMatch || "N/A"}
+                </p>
+
+                <p><strong>Result:</strong>
+                    ${match.result || "N/A"}
+                </p>
+
             </div>
         `;
 
@@ -154,25 +177,42 @@ async function loadBattingCard() {
 
             html += `
                 <div class="match-card">
-                    <strong>${batter.playerName}</strong>
+
+                    <strong>
+                        ${batter.playerName}
+                    </strong>
+
                     <br>
-                    ${batter.runs} (${batter.balls})
+
+                    ${batter.runs}
+                    (${batter.balls})
+
                     <br>
-                    4s: ${batter.fours}
+
+                    4s:
+                    ${batter.fours}
+
                     |
-                    6s: ${batter.sixes}
+
+                    6s:
+                    ${batter.sixes}
+
                     <br>
+
                     ${batter.dismissal}
+
                 </div>
             `;
         });
 
         if (html === "") {
 
-            html = "No batters added.";
+            html =
+                "No batters added.";
         }
 
-        battingCard.innerHTML = html;
+        battingCard.innerHTML =
+            html;
 
     } catch (error) {
 
