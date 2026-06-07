@@ -22,17 +22,66 @@
 
 <div class="section">
 
-    <h2>🏏 Innings Scorecard</h2>
+    <h2>🏏 Add Batter</h2>
 
-    <div id="inningsSection">
+    <select id="inningsNumber">
+        <option value="1">Innings 1</option>
+        <option value="2">Innings 2</option>
+        <option value="3">Innings 3</option>
+        <option value="4">Innings 4</option>
+    </select>
 
-        <p>No innings data available.</p>
+    <br><br>
 
-        <button>Add Batter</button>
+    <input type="text"
+           id="playerName"
+           placeholder="Player Name">
 
-        <button>Add Bowler</button>
+    <br><br>
 
-        <button>Add Wicket</button>
+    <input type="number"
+           id="runs"
+           placeholder="Runs">
+
+    <br><br>
+
+    <input type="number"
+           id="balls"
+           placeholder="Balls">
+
+    <br><br>
+
+    <input type="number"
+           id="fours"
+           placeholder="4s">
+
+    <br><br>
+
+    <input type="number"
+           id="sixes"
+           placeholder="6s">
+
+    <br><br>
+
+    <input type="text"
+           id="dismissal"
+           placeholder="Dismissal">
+
+    <br><br>
+
+    <button onclick="saveBatter()">
+        Save Batter
+    </button>
+
+</div>
+
+<div class="section">
+
+    <h2>🏏 Batting Card</h2>
+
+    <div id="battingCard">
+
+        No batters added.
 
     </div>
 
