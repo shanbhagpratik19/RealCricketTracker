@@ -24,6 +24,9 @@ const bowlingCard =
 const wicketCard =
     document.getElementById("wicketCard");
 
+const phaseCard =
+    document.getElementById("phaseCard");
+
 const params =
     new URLSearchParams(
         window.location.search
@@ -191,6 +194,151 @@ async function saveWicket() {
 }
 
 window.saveWicket = saveWicket;
+
+/* =========================
+   ODI PHASES
+========================= */
+
+async function savePhase() {
+
+    try {
+
+        await addDoc(
+            collection(db, "phases"),
+            {
+                matchId,
+
+                inningsNumber:
+                    document.getElementById("phaseInnings").value,
+
+                phaseName:
+                    document.getElementById("phaseName").value,
+
+                runs:
+                    document.getElementById("phaseRuns").value,
+
+                wickets:
+                    document.getElementById("phaseWickets").value,
+
+                runRate:
+                    document.getElementById("phaseRunRate").value,
+
+                topBatter:
+                    document.getElementById("topBatter").value,
+
+                topBowler:
+                    document.getElementById("topBowler").value,
+
+                summary:
+                    document.getElementById("phaseSummary").value,
+
+                createdAt:
+                    new Date().toISOString()
+            }
+        );
+
+        alert("Phase saved!");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+    }
+}
+
+window.savePhase = savePhase;
+
+async function loadPhases() {
+
+    if (!phaseCard) return;
+
+    const q = query(
+        collection(db, "phases"),
+        where("matchId", "==", matchId)
+    );
+
+    const snapshot =
+        await getDocs(q);
+
+    const phaseOrder = [
+        "0-10 Overs",
+        "11-20 Overs",
+        "21-30 Overs",
+        "31-40 Overs",
+        "41-50 Overs"
+    ];
+
+    let phases = [];
+
+    snapshot.forEach((doc) => {
+
+        phases.push(doc.data());
+
+    });
+
+    phases.sort((a, b) => {
+
+        return (
+            phaseOrder.indexOf(a.phaseName)
+            -
+            phaseOrder.indexOf(b.phaseName)
+        );
+
+    });
+
+    let html = "";
+
+    phases.forEach((phase) => {
+
+        const projectedScore =
+            (
+                Number(phase.runRate || 0)
+                * 50
+            ).toFixed(0);
+
+        html += `
+            <div class="match-card">
+
+                <h3>
+                    ${phase.phaseName}
+                </h3>
+
+                <p>
+                    ${phase.runs}/${phase.wickets}
+                </p>
+
+                <p>
+                    RR:
+                    ${phase.runRate}
+                </p>
+
+                <p>
+                    Projected Score:
+                    ${projectedScore}
+                </p>
+
+                <p>
+                    <strong>Top Batter:</strong>
+                    ${phase.topBatter}
+                </p>
+
+                <p>
+                    <strong>Top Bowler:</strong>
+                    ${phase.topBowler}
+                </p>
+
+                <p>
+                    ${phase.summary}
+                </p>
+
+            </div>
+        `;
+    });
+
+    phaseCard.innerHTML =
+        html || "No phases recorded.";
+}
 
 /* =========================
    INNINGS SUMMARY
@@ -448,3 +596,4 @@ loadInningsSummary();
 loadBattingCard();
 loadBowlingCard();
 loadWickets();
+loadPhases();
