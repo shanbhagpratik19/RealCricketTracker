@@ -15,6 +15,12 @@ const container =
 const battingCard =
     document.getElementById("battingCard");
 
+const bowlingCard =
+    document.getElementById("bowlingCard");
+
+const wicketCard =
+    document.getElementById("wicketCard");
+
 const params =
     new URLSearchParams(
         window.location.search
@@ -23,28 +29,11 @@ const params =
 const matchId =
     params.get("id");
 
+/* =========================
+   BATTERS
+========================= */
+
 async function saveBatter() {
-
-    const inningsNumber =
-        document.getElementById("inningsNumber").value;
-
-    const playerName =
-        document.getElementById("playerName").value;
-
-    const runs =
-        document.getElementById("runs").value;
-
-    const balls =
-        document.getElementById("balls").value;
-
-    const fours =
-        document.getElementById("fours").value;
-
-    const sixes =
-        document.getElementById("sixes").value;
-
-    const dismissal =
-        document.getElementById("dismissal").value;
 
     try {
 
@@ -52,14 +41,29 @@ async function saveBatter() {
             collection(db, "innings"),
             {
                 matchId,
-                inningsNumber,
-                playerName,
-                runs,
-                balls,
-                fours,
-                sixes,
-                dismissal,
+                inningsNumber:
+                    document.getElementById("inningsNumber").value,
+
+                playerName:
+                    document.getElementById("playerName").value,
+
+                runs:
+                    document.getElementById("runs").value,
+
+                balls:
+                    document.getElementById("balls").value,
+
+                fours:
+                    document.getElementById("fours").value,
+
+                sixes:
+                    document.getElementById("sixes").value,
+
+                dismissal:
+                    document.getElementById("dismissal").value,
+
                 type: "batter",
+
                 createdAt:
                     new Date().toISOString()
             }
@@ -77,7 +81,118 @@ async function saveBatter() {
     }
 }
 
-window.saveBatter = saveBatter;
+window.saveBatter =
+    saveBatter;
+
+/* =========================
+   BOWLERS
+========================= */
+
+async function saveBowler() {
+
+    try {
+
+        await addDoc(
+            collection(db, "innings"),
+            {
+                matchId,
+
+                inningsNumber:
+                    document.getElementById("bowlingInnings").value,
+
+                bowlerName:
+                    document.getElementById("bowlerName").value,
+
+                overs:
+                    document.getElementById("overs").value,
+
+                maidens:
+                    document.getElementById("maidens").value,
+
+                runsConceded:
+                    document.getElementById("runsConceded").value,
+
+                wickets:
+                    document.getElementById("wickets").value,
+
+                type: "bowler",
+
+                createdAt:
+                    new Date().toISOString()
+            }
+        );
+
+        alert("Bowler saved!");
+
+        loadBowlingCard();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+    }
+}
+
+window.saveBowler =
+    saveBowler;
+
+/* =========================
+   WICKETS
+========================= */
+
+async function saveWicket() {
+
+    try {
+
+        await addDoc(
+            collection(db, "innings"),
+            {
+                matchId,
+
+                score:
+                    document.getElementById("wicketScore").value,
+
+                player:
+                    document.getElementById("wicketPlayer").value,
+
+                runs:
+                    document.getElementById("wicketRuns").value,
+
+                balls:
+                    document.getElementById("wicketBalls").value,
+
+                over:
+                    document.getElementById("wicketOver").value,
+
+                dismissal:
+                    document.getElementById("wicketDismissal").value,
+
+                type: "wicket",
+
+                createdAt:
+                    new Date().toISOString()
+            }
+        );
+
+        alert("Wicket saved!");
+
+        loadWickets();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+    }
+}
+
+window.saveWicket =
+    saveWicket;
+
+/* =========================
+   MATCH DETAILS
+========================= */
 
 async function loadMatch() {
 
@@ -127,98 +242,176 @@ async function loadMatch() {
 
                 <p><strong>Status:</strong> ${match.status || "N/A"}</p>
 
-                <p><strong>Toss:</strong>
-                    ${match.tossWinner || "N/A"}
-                    chose to
-                    ${match.tossDecision || "N/A"}
-                </p>
-
-                <p><strong>Player Of Match:</strong>
-                    ${match.playerOfMatch || "N/A"}
-                </p>
-
-                <p><strong>Result:</strong>
-                    ${match.result || "N/A"}
-                </p>
-
             </div>
         `;
 
     } catch (error) {
 
         console.error(error);
-
-        container.innerHTML =
-            "Unable to load match.";
     }
 }
+
+/* =========================
+   LOAD BATTERS
+========================= */
 
 async function loadBattingCard() {
 
-    if (!battingCard) return;
+    const q = query(
+        collection(db, "innings"),
+        where("matchId", "==", matchId),
+        where("type", "==", "batter")
+    );
 
-    try {
+    const snapshot =
+        await getDocs(q);
 
-        const q = query(
-            collection(db, "innings"),
-            where("matchId", "==", matchId),
-            where("type", "==", "batter")
-        );
+    let html = "";
 
-        const snapshot =
-            await getDocs(q);
+    snapshot.forEach((doc) => {
 
-        let html = "";
+        const batter =
+            doc.data();
 
-        snapshot.forEach((doc) => {
+        html += `
+            <div class="match-card">
 
-            const batter =
-                doc.data();
+                <strong>
+                    ${batter.playerName}
+                </strong>
 
-            html += `
-                <div class="match-card">
+                <br>
 
-                    <strong>
-                        ${batter.playerName}
-                    </strong>
+                ${batter.runs}
+                (${batter.balls})
 
-                    <br>
+                <br>
 
-                    ${batter.runs}
-                    (${batter.balls})
+                4s:
+                ${batter.fours}
 
-                    <br>
+                |
 
-                    4s:
-                    ${batter.fours}
+                6s:
+                ${batter.sixes}
 
-                    |
+                <br>
 
-                    6s:
-                    ${batter.sixes}
+                ${batter.dismissal}
 
-                    <br>
+            </div>
+        `;
+    });
 
-                    ${batter.dismissal}
-
-                </div>
-            `;
-        });
-
-        if (html === "") {
-
-            html =
-                "No batters added.";
-        }
-
-        battingCard.innerHTML =
-            html;
-
-    } catch (error) {
-
-        console.error(error);
-    }
+    battingCard.innerHTML =
+        html || "No batters added.";
 }
+
+/* =========================
+   LOAD BOWLERS
+========================= */
+
+async function loadBowlingCard() {
+
+    const q = query(
+        collection(db, "innings"),
+        where("matchId", "==", matchId),
+        where("type", "==", "bowler")
+    );
+
+    const snapshot =
+        await getDocs(q);
+
+    let html = "";
+
+    snapshot.forEach((doc) => {
+
+        const bowler =
+            doc.data();
+
+        html += `
+            <div class="match-card">
+
+                <strong>
+                    ${bowler.bowlerName}
+                </strong>
+
+                <br>
+
+                ${bowler.overs}
+                -
+                ${bowler.maidens}
+                -
+                ${bowler.runsConceded}
+                -
+                ${bowler.wickets}
+
+            </div>
+        `;
+    });
+
+    bowlingCard.innerHTML =
+        html || "No bowlers added.";
+}
+
+/* =========================
+   LOAD WICKETS
+========================= */
+
+async function loadWickets() {
+
+    const q = query(
+        collection(db, "innings"),
+        where("matchId", "==", matchId),
+        where("type", "==", "wicket")
+    );
+
+    const snapshot =
+        await getDocs(q);
+
+    let html = "";
+
+    snapshot.forEach((doc) => {
+
+        const wicket =
+            doc.data();
+
+        html += `
+            <div class="match-card">
+
+                <strong>
+                    ${wicket.score}
+                </strong>
+
+                <br>
+
+                ${wicket.player}
+
+                ${wicket.runs}
+                (${wicket.balls})
+
+                <br>
+
+                Over:
+                ${wicket.over}
+
+                <br>
+
+                ${wicket.dismissal}
+
+            </div>
+        `;
+    });
+
+    wicketCard.innerHTML =
+        html || "No wickets recorded.";
+}
+
+/* =========================
+   INIT
+========================= */
 
 loadMatch();
 loadBattingCard();
+loadBowlingCard();
+loadWickets();
