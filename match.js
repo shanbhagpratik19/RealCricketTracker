@@ -1,17 +1,83 @@
-import { db, doc, getDoc } from "./firestore.js";
+import {
+    db,
+    doc,
+    getDoc,
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    where
+} from "./firestore.js";
 
 const container =
     document.getElementById("matchDetails");
 
-async function loadMatch() {
+const battingCard =
+    document.getElementById("battingCard");
 
-    const params =
-        new URLSearchParams(
-            window.location.search
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const matchId =
+    params.get("id");
+
+window.saveBatter = async function () {
+
+    const inningsNumber =
+        document.getElementById("inningsNumber").value;
+
+    const playerName =
+        document.getElementById("playerName").value;
+
+    const runs =
+        document.getElementById("runs").value;
+
+    const balls =
+        document.getElementById("balls").value;
+
+    const fours =
+        document.getElementById("fours").value;
+
+    const sixes =
+        document.getElementById("sixes").value;
+
+    const dismissal =
+        document.getElementById("dismissal").value;
+
+    try {
+
+        await addDoc(
+            collection(db, "innings"),
+            {
+                matchId,
+                inningsNumber,
+                playerName,
+                runs,
+                balls,
+                fours,
+                sixes,
+                dismissal,
+                type: "batter",
+                createdAt:
+                    new Date().toISOString()
+            }
         );
 
-    const matchId =
-        params.get("id");
+        alert("Batter saved!");
+
+        loadBattingCard();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+    }
+};
+
+async function loadMatch() {
 
     if (!matchId) {
 
@@ -59,23 +125,6 @@ async function loadMatch() {
 
                 <p><strong>Status:</strong> ${match.status || "N/A"}</p>
 
-                <p>
-                    <strong>Toss:</strong>
-                    ${match.tossWinner || "N/A"}
-                    chose to
-                    ${match.tossDecision || "N/A"}
-                </p>
-
-                <p>
-                    <strong>Player Of Match:</strong>
-                    ${match.playerOfMatch || "N/A"}
-                </p>
-
-                <p>
-                    <strong>Result:</strong>
-                    ${match.result || "N/A"}
-                </p>
-
             </div>
         `;
 
@@ -88,4 +137,72 @@ async function loadMatch() {
     }
 }
 
+async function loadBattingCard() {
+
+    if (!battingCard) return;
+
+    try {
+
+        const q = query(
+            collection(db, "innings"),
+            where("matchId", "==", matchId),
+            where("type", "==", "batter")
+        );
+
+        const snapshot =
+            await getDocs(q);
+
+        let html = "";
+
+        snapshot.forEach((doc) => {
+
+            const batter =
+                doc.data();
+
+            html += `
+                <div class="match-card">
+
+                    <strong>
+                        ${batter.playerName}
+                    </strong>
+
+                    <br>
+
+                    ${batter.runs}
+                    (${batter.balls})
+
+                    <br>
+
+                    4s:
+                    ${batter.fours}
+
+                    |
+
+                    6s:
+                    ${batter.sixes}
+
+                    <br>
+
+                    ${batter.dismissal}
+
+                </div>
+            `;
+        });
+
+        if (html === "") {
+
+            html =
+                "No batters added.";
+        }
+
+        battingCard.innerHTML =
+            html;
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
 loadMatch();
+loadBattingCard();
