@@ -578,21 +578,62 @@ async function loadBowlingCard() {
     const snapshot =
         await getDocs(q);
 
-    let html = "";
+    let innings = {
+        1: [],
+        2: [],
+        3: [],
+        4: []
+    };
 
     snapshot.forEach((doc) => {
 
         const bowler =
             doc.data();
 
+        const inn =
+            bowler.inningsNumber || 1;
+
+        innings[inn].push(bowler);
+
+    });
+
+    let html = "";
+
+    for (let i = 1; i <= 4; i++) {
+
+        if (
+            innings[i].length === 0
+        ) continue;
+
         html += `
             <div class="match-card">
-                <strong>${bowler.bowlerName}</strong>
-                <br>
-                ${bowler.overs}-${bowler.maidens}-${bowler.runsConceded}-${bowler.wickets}
+                <h2>
+                    Bowling - Innings ${i}
+                </h2>
             </div>
         `;
-    });
+
+        innings[i].forEach((bowler) => {
+
+            html += `
+                <div class="match-card">
+
+                    <strong>
+                        ${bowler.bowlerName}
+                    </strong>
+
+                    <br>
+
+                    ${bowler.overs} -
+                    ${bowler.maidens} -
+                    ${bowler.runsConceded} -
+                    ${bowler.wickets}
+
+                </div>
+            `;
+        });
+
+    }
 
     bowlingCard.innerHTML =
         html || "No bowlers added.";
