@@ -488,6 +488,90 @@ async function loadBattingCard() {
     const snapshot =
         await getDocs(q);
 
+    let innings = {
+        1: [],
+        2: [],
+        3: [],
+        4: []
+    };
+
+    snapshot.forEach((doc) => {
+
+        const batter =
+            doc.data();
+
+        const inn =
+            batter.inningsNumber || 1;
+
+        innings[inn].push(batter);
+
+    });
+
+    let html = "";
+
+    for (let i = 1; i <= 4; i++) {
+
+        if (
+            innings[i].length === 0
+        ) continue;
+
+        html += `
+            <div class="match-card">
+
+                <h2>
+                    Innings ${i}
+                </h2>
+
+            </div>
+        `;
+
+        innings[i].forEach((batter) => {
+
+            html += `
+                <div class="match-card">
+
+                    <strong>
+                        ${batter.playerName}
+                    </strong>
+
+                    <br>
+
+                    ${batter.runs}
+                    (${batter.balls})
+
+                    <br>
+
+                    4s:
+                    ${batter.fours || 0}
+
+                    |
+
+                    6s:
+                    ${batter.sixes || 0}
+
+                    <br>
+
+                    ${batter.dismissal}
+
+                </div>
+            `;
+        });
+
+    }
+
+    battingCard.innerHTML =
+        html || "No batters added.";
+}
+
+    const q = query(
+        collection(db, "innings"),
+        where("matchId", "==", matchId),
+        where("type", "==", "batter")
+    );
+
+    const snapshot =
+        await getDocs(q);
+
     let html = "";
 
     snapshot.forEach((doc) => {
