@@ -210,19 +210,33 @@ async function saveInningsLabels() {
         await updateDoc(
             matchRef,
             {
-                innings1Label:
-                    document.getElementById("innings1Label").value,
+                const innings1 =
+    document.getElementById("innings1Label");
 
-                innings2Label:
-                    document.getElementById("innings2Label").value,
+const innings2 =
+    document.getElementById("innings2Label");
 
-                innings3Label:
-                    document.getElementById("innings3Label").value,
+const innings3 =
+    document.getElementById("innings3Label");
 
-                innings4Label:
-                    document.getElementById("innings4Label").value
-            }
-        );
+const innings4 =
+    document.getElementById("innings4Label");
+
+if (innings1)
+    innings1.value =
+        match.innings1Label || "";
+
+if (innings2)
+    innings2.value =
+        match.innings2Label || "";
+
+if (innings3)
+    innings3.value =
+        match.innings3Label || "";
+
+if (innings4)
+    innings4.value =
+        match.innings4Label || "";
 
         alert("Labels saved!");
 
