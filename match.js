@@ -197,63 +197,6 @@ async function saveWicket() {
 window.saveWicket = saveWicket;
 
 /* =========================
-   INNINGS LABELS
-========================= */
-
-async function saveInningsLabels() {
-
-    try {
-
-        const matchRef =
-            doc(db, "matches", matchId);
-
-        await updateDoc(
-            matchRef,
-            {
-                const innings1 =
-    document.getElementById("innings1Label");
-
-const innings2 =
-    document.getElementById("innings2Label");
-
-const innings3 =
-    document.getElementById("innings3Label");
-
-const innings4 =
-    document.getElementById("innings4Label");
-
-if (innings1)
-    innings1.value =
-        match.innings1Label || "";
-
-if (innings2)
-    innings2.value =
-        match.innings2Label || "";
-
-if (innings3)
-    innings3.value =
-        match.innings3Label || "";
-
-if (innings4)
-    innings4.value =
-        match.innings4Label || "";
-
-        alert("Labels saved!");
-
-        loadMatch();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(error.message);
-    }
-}
-
-window.saveInningsLabels =
-    saveInningsLabels;
-
-/* =========================
    ODI PHASES
 ========================= */
 
