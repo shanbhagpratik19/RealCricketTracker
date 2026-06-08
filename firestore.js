@@ -7,6 +7,7 @@ import {
   getDocs,
   doc,
   getDoc,
+  updateDoc,
   query,
   where
 } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
@@ -31,6 +32,7 @@ export {
   getDocs,
   doc,
   getDoc,
+  updateDoc,
   query,
   where
 };
