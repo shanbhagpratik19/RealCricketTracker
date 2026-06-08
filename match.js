@@ -355,61 +355,87 @@ async function loadInningsSummary() {
     const snapshot =
         await getDocs(q);
 
-    let totalRuns = 0;
-    let totalBalls = 0;
-    let totalWickets = 0;
+    let innings = {
+        1: [],
+        2: [],
+        3: [],
+        4: []
+    };
 
     snapshot.forEach((doc) => {
 
         const batter =
             doc.data();
 
-        totalRuns +=
-            Number(batter.runs || 0);
+        const inn =
+            batter.inningsNumber || 1;
 
-        totalBalls +=
-            Number(batter.balls || 0);
-
-        if (
-            batter.dismissal &&
-            batter.dismissal.trim() !== "" &&
-            batter.dismissal.toLowerCase() !== "not out"
-        ) {
-            totalWickets++;
-        }
+        innings[inn].push(batter);
 
     });
 
-    const overs =
-        Math.floor(totalBalls / 6) +
-        "." +
-        (totalBalls % 6);
+    let html = "";
 
-    const runRate =
-        totalBalls > 0
-            ? ((totalRuns / totalBalls) * 6)
-                .toFixed(2)
-            : "0.00";
+    for (let i = 1; i <= 4; i++) {
 
-    inningsSummary.innerHTML = `
-        <div class="match-card">
+        if (
+            innings[i].length === 0
+        ) continue;
 
-            <h3>
-                ${totalRuns}/${totalWickets}
-            </h3>
+        let runs = 0;
+        let wickets = 0;
+        let balls = 0;
 
-            <p>
-                Overs:
-                ${overs}
-            </p>
+        innings[i].forEach((batter) => {
 
-            <p>
-                Run Rate:
-                ${runRate}
-            </p>
+            runs +=
+                Number(batter.runs || 0);
 
-        </div>
-    `;
+            balls +=
+                Number(batter.balls || 0);
+
+            const dismissal =
+                (batter.dismissal || "")
+                    .trim()
+                    .toLowerCase();
+
+            if (
+                dismissal !== "" &&
+                dismissal !== "*" &&
+                dismissal !== "not out"
+            ) {
+                wickets++;
+            }
+
+        });
+
+        const overs =
+            Math.floor(balls / 6)
+            + "."
+            + (balls % 6);
+
+        html += `
+            <div class="match-card">
+
+                <h2>
+                    Innings ${i}
+                </h2>
+
+                <h3>
+                    ${runs}/${wickets}
+                </h3>
+
+                <p>
+                    Overs:
+                    ${overs}
+                </p>
+
+            </div>
+        `;
+    }
+
+    inningsSummary.innerHTML =
+        html || "No innings data.";
 }
 
 /* =========================
