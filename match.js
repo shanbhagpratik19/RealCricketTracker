@@ -2,6 +2,7 @@ import {
     db,
     doc,
     getDoc,
+    updateDoc,
     collection,
     addDoc,
     getDocs,
@@ -194,6 +195,49 @@ async function saveWicket() {
 }
 
 window.saveWicket = saveWicket;
+
+/* =========================
+   INNINGS LABELS
+========================= */
+
+async function saveInningsLabels() {
+
+    try {
+
+        const matchRef =
+            doc(db, "matches", matchId);
+
+        await updateDoc(
+            matchRef,
+            {
+                innings1Label:
+                    document.getElementById("innings1Label").value,
+
+                innings2Label:
+                    document.getElementById("innings2Label").value,
+
+                innings3Label:
+                    document.getElementById("innings3Label").value,
+
+                innings4Label:
+                    document.getElementById("innings4Label").value
+            }
+        );
+
+        alert("Labels saved!");
+
+        loadMatch();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+    }
+}
+
+window.saveInningsLabels =
+    saveInningsLabels;
 
 /* =========================
    ODI PHASES
