@@ -399,102 +399,47 @@ async function loadPhases() {
 }
 
 /* =========================
-   INNINGS SUMMARY
+   INNINGS LABELS
 ========================= */
 
-async function loadInningsSummary() {
+async function saveInningsLabels() {
 
-    const q = query(
-        collection(db, "innings"),
-        where("matchId", "==", matchId),
-        where("type", "==", "batter")
-    );
+    try {
 
-    const snapshot =
-        await getDocs(q);
+        const matchRef =
+            doc(db, "matches", matchId);
 
-    let innings = {
-        1: [],
-        2: [],
-        3: [],
-        4: []
-    };
+        await updateDoc(
+            matchRef,
+            {
+                innings1Label:
+                    document.getElementById("innings1Label").value,
 
-    snapshot.forEach((doc) => {
+                innings2Label:
+                    document.getElementById("innings2Label").value,
 
-        const batter =
-            doc.data();
+                innings3Label:
+                    document.getElementById("innings3Label").value,
 
-        const inn =
-            batter.inningsNumber || 1;
-
-        innings[inn].push(batter);
-
-    });
-
-    let html = "";
-
-    for (let i = 1; i <= 4; i++) {
-
-        if (
-            innings[i].length === 0
-        ) continue;
-
-        let runs = 0;
-        let wickets = 0;
-        let balls = 0;
-
-        innings[i].forEach((batter) => {
-
-            runs +=
-                Number(batter.runs || 0);
-
-            balls +=
-                Number(batter.balls || 0);
-
-            const dismissal =
-                (batter.dismissal || "")
-                    .trim()
-                    .toLowerCase();
-
-            if (
-                dismissal !== "" &&
-                dismissal !== "*" &&
-                dismissal !== "not out"
-            ) {
-                wickets++;
+                innings4Label:
+                    document.getElementById("innings4Label").value
             }
+        );
 
-        });
+        alert("Labels saved!");
 
-        const overs =
-            Math.floor(balls / 6)
-            + "."
-            + (balls % 6);
+        loadMatch();
 
-        html += `
-            <div class="match-card">
+    } catch (error) {
 
-                <h2>
-                    Innings ${i}
-                </h2>
+        console.error(error);
 
-                <h3>
-                    ${runs}/${wickets}
-                </h3>
-
-                <p>
-                    Overs:
-                    ${overs}
-                </p>
-
-            </div>
-        `;
+        alert(error.message);
     }
-
-    inningsSummary.innerHTML =
-        html || "No innings data.";
 }
+
+window.saveInningsLabels =
+    saveInningsLabels;
 
 /* =========================
    MATCH DETAILS
@@ -529,17 +474,33 @@ async function loadMatch() {
         const match =
             matchSnap.data();
 
-        document.getElementById("innings1Label").value =
-    match.innings1Label || "";
+        const innings1 =
+    document.getElementById("innings1Label");
 
-document.getElementById("innings2Label").value =
-    match.innings2Label || "";
+const innings2 =
+    document.getElementById("innings2Label");
 
-document.getElementById("innings3Label").value =
-    match.innings3Label || "";
+const innings3 =
+    document.getElementById("innings3Label");
 
-document.getElementById("innings4Label").value =
-    match.innings4Label || "";
+const innings4 =
+    document.getElementById("innings4Label");
+
+if (innings1)
+    innings1.value =
+        match.innings1Label || "";
+
+if (innings2)
+    innings2.value =
+        match.innings2Label || "";
+
+if (innings3)
+    innings3.value =
+        match.innings3Label || "";
+
+if (innings4)
+    innings4.value =
+        match.innings4Label || "";
 
         container.innerHTML = `
             <div class="match-card">
