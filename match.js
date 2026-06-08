@@ -515,6 +515,18 @@ async function loadMatch() {
         const match =
             matchSnap.data();
 
+        document.getElementById("innings1Label").value =
+    match.innings1Label || "";
+
+document.getElementById("innings2Label").value =
+    match.innings2Label || "";
+
+document.getElementById("innings3Label").value =
+    match.innings3Label || "";
+
+document.getElementById("innings4Label").value =
+    match.innings4Label || "";
+
         container.innerHTML = `
             <div class="match-card">
 
